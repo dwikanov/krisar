@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Form Harapan</title>
+</head>
+
+<body>
+    <form id="myForm">
+        <label for="nama">Nama:</label>
+        <input type="text" id="nama" name="nama"><br><br>
+        <label for="harapan">Harapan:</label>
+        <input type="text" id="harapan" name="harapan"><br><br>
+        <input type="button" value="Submit" onclick="submitForm()">
+    </form>
+    <div id="history"></div>
+
+    <script>
+        function submitForm() {
+            const form = document.getElementById('myForm');
+            const name = form.elements['name'].value;
+            const harapan = form.elements['harapan'].value;
+
+            // Ganti dengan client ID dan client secret Anda
+            const clientId = 'YOUR_CLIENT_ID';
+            const clientSecret = 'YOUR_CLIENT_SECRET';
+            const spreadsheetId = 'YOUR_SPREADSHEET_ID';
+            const range = 'Sheet1!A2:C'; // Sesuaikan dengan range yang Anda inginkan
+
+            const data = [
+                [new Date(), name, harapan]
+            ];
+
+            gapi.load('client:auth2', () => {
+                gapi.client.init({
+                    apiKey: YOUR_API_KEY,
+                    clientId: clientId,
+                    scope: 'https://www.googleapis.com/auth/spreadsheets'
+                }).then(() => {
+                    gapi.client.sheets.spreadsheets.values.append({
+                        spreadsheetId: spreadsheetId,
+                        range: range,
+                        valueInputOption: 'RAW',
+                        insertDataOption: 'INSERT_ROWS',
+                        values: data
+                    })
+                        .then((response) => {
+                            console.log('Data berhasil ditambahkan');
+                        })
+                        .catch((error) => {
+                            console.error('Terjadi kesalahan:', error);
+                        });
+                });
+            });
+        }
+    </script>
+</body>
+
+</html>
